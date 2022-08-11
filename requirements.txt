@@ -1,0 +1,18 @@
+# schema_design
+psycopg2-binary
+faker
+
+
+# movies_admin
+
+
+
+# sqlite_to_postgres
+
+
+# Workflow
+flake8==4.0.1
+wemake-python-styleguide==0.16.1
+flake8-bandit==3.0.0
+bandit==1.7.4
+pre-commit
