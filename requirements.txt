@@ -16,3 +16,4 @@ wemake-python-styleguide==0.16.1
 flake8-bandit==3.0.0
 bandit==1.7.4
 pre-commit==2.20
+python-dotenv==0.20.0
