@@ -5,6 +5,7 @@ faker==13.15
 
 # movies_admin
 django==3.2
+django-split-settings
 
 
 # sqlite_to_postgres
