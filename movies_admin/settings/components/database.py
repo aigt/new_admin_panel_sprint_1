@@ -4,6 +4,7 @@ import os
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
@@ -17,6 +18,4 @@ DATABASES = {
 }
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
