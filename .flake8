@@ -2,7 +2,7 @@
 per-file-ignores =
   schema_design/tools/populate_person.py: WPS316, WPS323, S311
   # Allow `__init__.py` with logic for configuration:
-  movies_admin/config/settings/*.py: WPS226, WPS407, WPS412, WPS432
+  movies_admin/settings/*.py: WPS226, WPS407, WPS412, WPS432
   # Allow to have magic numbers inside migrations and wrong module names:
   movies_admin/*/migrations/*.py: WPS102, WPS114, WPS432
 

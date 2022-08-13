@@ -25,7 +25,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'movies_admin.config.urls'
+ROOT_URLCONF = 'movies_admin.urls'
 
 TEMPLATES = [
     {
@@ -43,7 +43,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'movies_admin.config.wsgi.application'
+WSGI_APPLICATION = 'movies_admin.wsgi.application'
 
 
 # Password validation

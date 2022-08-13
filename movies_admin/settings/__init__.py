@@ -7,9 +7,9 @@ from dotenv import load_dotenv
 from split_settings.tools import include, optional
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-load_dotenv(dotenv_path=BASE_DIR.joinpath('movies_admin/config/.env'))
+load_dotenv(dotenv_path=BASE_DIR.joinpath('config/.env'))
 
 
 # Managing environment via `DJANGO_ENV` variable:

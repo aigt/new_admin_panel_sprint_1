@@ -63,5 +63,5 @@ __pycache__/
 local_settings.py
 
 
-movies_admin/config/.env
+config/.env
 db.sqlite3
