@@ -4,27 +4,58 @@ import uuid
 
 from django.db import models
 
+GENRE_NAME_MAX_LENGTH = 255
+FILMWORK_TITLE_MAX_LENGTH = 255
+
 
 class Genre(models.Model):
-    """Жанры."""
+    """Жанр."""
 
-    # Типичная модель в Django использует число в качестве id.
-    # В таких ситуациях поле не описывается в модели.
-    # Вам же придётся явно объявить primary key.
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # Первым аргументом обычно идёт человекочитаемое название поля
-    name = models.CharField('name', max_length=255)
-    # blank=True делает поле необязательным для заполнения.
+    name = models.CharField('name', max_length=GENRE_NAME_MAX_LENGTH)
     description = models.TextField('description', blank=True)
-    # auto_now_add автоматически выставит дату создания записи
     created = models.DateTimeField(auto_now_add=True)
-    # auto_now изменятся при каждом обновлении записи
     modified = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        """Строковое представление модели.
+
+        Returns:
+            str: Имя жанра
+        """
+        return self.name
+
     class Meta:
-        # Ваши таблицы находятся в нестандартной схеме.
-        # Это нужно указать в классе модели
-        db_table = "content\".\"genre"
-        # Следующие два поля отвечают за название модели в интерфейсе
+        db_table = 'content\".\"genre'
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
+
+
+class Filmwork(models.Model):
+    """Кинопроизведения."""
+
+    class Type(models.TextChoices):
+        MOVIE = ('MOVIE', 'movie')
+        TV_SHOW = ('TV_SHOW', 'tv_show')
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField('title', max_length=FILMWORK_TITLE_MAX_LENGTH)
+    description = models.TextField('description', blank=True)
+    creation_date = models.DateField('creation_date', blank=True)
+    rating = models.FloatField('rating', blank=True)
+    type = models.TextField('type', choices=Type.choices)
+    created = models.DateTimeField(auto_now_add=True, blank=True)
+    modified = models.DateTimeField(auto_now=True, blank=True)
+
+    def __str__(self):
+        """Строковое представление модели.
+
+        Returns:
+            str: Название фильма
+        """
+        return self.title
+
+    class Meta:
+        db_table = 'content\".\"film_work'
+        verbose_name = 'Кинопроизведение'
+        verbose_name_plural = 'Кинопроизведения'

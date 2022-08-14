@@ -5,9 +5,11 @@ per-file-ignores =
   movies_admin/settings/*.py: WPS226, WPS407, WPS412, WPS432
   # Allow to have magic numbers inside migrations and wrong module names:
   movies_admin/*/migrations/*.py: WPS102, WPS114, WPS432
+  # Found upper-case constant in a class - Для choise'ов
+  movies_admin/apps/*/models.py: WPS115
 
 # Excluding some directories:
 exclude = .git,__pycache__,venv,.eggs,*.egg,manage.py
 
 # Disable some pydocstyle checks:
-ignore = D100, D104, D106, D401, X100, W504, RST303, RST304, DAR103, DAR203
+ignore = D100, D104, D106, D401, X100, W504, RST303, RST304, DAR103, DAR203, WPS306, WPS431, WPS226
