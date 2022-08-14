@@ -12,4 +12,4 @@ per-file-ignores =
 exclude = .git,__pycache__,venv,.eggs,*.egg,manage.py
 
 # Disable some pydocstyle checks:
-ignore = D100, D104, D106, D401, X100, W504, RST303, RST304, DAR103, DAR203, WPS306, WPS431, WPS226
+ignore = D100, D104, D106, D401, X100, W504, RST303, RST304, DAR103, DAR203, WPS306, WPS431
