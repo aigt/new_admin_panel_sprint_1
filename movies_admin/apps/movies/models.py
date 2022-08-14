@@ -4,6 +4,7 @@ import uuid
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 GENRE_NAME_MAX_LENGTH = 255
 FILMWORK_TITLE_MAX_LENGTH = 255
@@ -32,8 +33,8 @@ class TimeStampedMixin(models.Model):
 class Genre(UUIDMixin, TimeStampedMixin):
     """Жанр."""
 
-    name = models.CharField('name', max_length=GENRE_NAME_MAX_LENGTH)
-    description = models.TextField('description', blank=True)
+    name = models.CharField(_('name'), max_length=GENRE_NAME_MAX_LENGTH)
+    description = models.TextField(_('description'), blank=True)
 
     def __str__(self):
         """Строковое представление модели.
@@ -45,15 +46,15 @@ class Genre(UUIDMixin, TimeStampedMixin):
 
     class Meta:
         db_table = 'content\".\"genre'
-        verbose_name = 'Жанр'
-        verbose_name_plural = 'Жанры'
+        verbose_name = _('genre')
+        verbose_name_plural = _('genres')
 
 
 class Person(UUIDMixin, TimeStampedMixin):
     """Персона."""
 
     full_name = models.CharField(
-        'full_name',
+        _('full_name'),
         max_length=PERSON_FULLNAME_MAX_LENGTH,
     )
 
@@ -67,26 +68,26 @@ class Person(UUIDMixin, TimeStampedMixin):
 
     class Meta:
         db_table = 'content\".\"person'
-        verbose_name = 'Персона'
-        verbose_name_plural = 'Персоны'
+        verbose_name = _('person')
+        verbose_name_plural = _('persons')
 
 
 class Filmwork(UUIDMixin, TimeStampedMixin):
     """Кинопроизведения."""
 
     class Type(models.TextChoices):
-        MOVIE = ('MOVIE', 'movie')
-        TV_SHOW = ('TV_SHOW', 'tv_show')
+        MOVIE = ('MOVIE', _('movie'))
+        TV_SHOW = ('TV_SHOW', _('tv_show'))
 
-    title = models.CharField('title', max_length=FILMWORK_TITLE_MAX_LENGTH)
-    description = models.TextField('description', blank=True)
-    creation_date = models.DateField('creation_date', blank=True)
+    title = models.CharField(_('title'), max_length=FILMWORK_TITLE_MAX_LENGTH)
+    description = models.TextField(_('description'), blank=True)
+    creation_date = models.DateField(_('creation_date'), blank=True)
     rating = models.FloatField(
-        'rating',
+        _('rating'),
         blank=True,
         validators=(MinValueValidator(0), MaxValueValidator(100)),
     )
-    type = models.TextField('type', choices=Type.choices)
+    type = models.TextField(_('type'), choices=Type.choices)
 
     # Связи
     genres = models.ManyToManyField(Genre, through='GenreFilmwork')
@@ -102,8 +103,8 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
 
     class Meta:
         db_table = 'content\".\"film_work'
-        verbose_name = 'Кинопроизведение'
-        verbose_name_plural = 'Кинопроизведения'
+        verbose_name = _('filmwork')
+        verbose_name_plural = _('filmworks')
 
 
 class GenreFilmwork(UUIDMixin):
@@ -122,7 +123,7 @@ class PersonFilmwork(UUIDMixin):
 
     film_work = models.ForeignKey('Filmwork', on_delete=models.CASCADE)
     person = models.ForeignKey('Person', on_delete=models.CASCADE)
-    role = models.TextField('role')
+    role = models.TextField(_('role'))
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -67,6 +67,7 @@ LANGUAGE_CODE = 'ru-RU'
 TIME_ZONE = 'Asia/Yekaterinburg'
 
 USE_I18N = True
+LOCALE_PATHS = ['movies_admin/apps/movies/locale/']
 
 USE_L10N = True
 
