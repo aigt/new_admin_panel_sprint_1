@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from movies_admin.apps.movies.models import Filmwork, Genre, GenreFilmwork
+from movies_admin.apps.movies.models import (
+    Filmwork,
+    Genre,
+    GenreFilmwork,
+    Person,
+    PersonFilmwork,
+)
 
 TIMESTAMP_FIELDS = (
     'created',
@@ -19,18 +25,48 @@ class GenreAdmin(admin.ModelAdmin):
     )
     readonly_fields = TIMESTAMP_FIELDS
 
+    list_display = (
+        'name',
+        'description',
+    )
+    search_fields = ('name', 'description', 'id')
+
+
+@admin.register(Person)
+class PersonAdmin(admin.ModelAdmin):
+    """Настройки администраторской панели для персон."""
+
+    fields = (
+        'full_name',
+        *TIMESTAMP_FIELDS,
+    )
+    readonly_fields = TIMESTAMP_FIELDS
+
+    search_fields = ('full_name', 'id')
+
 
 class GenreFilmworkInline(admin.TabularInline):
     """Настройки вложенной формы связи жанры-кинопроизведения."""
 
     model = GenreFilmwork
+    raw_id_fields = ('genre',)
+
+
+class PersonFilmworkInline(admin.TabularInline):
+    """Настройки вложенной формы связи персоны-кинопроизведения."""
+
+    model = PersonFilmwork
+    raw_id_fields = ('person',)
 
 
 @admin.register(Filmwork)
 class FilmworkAdmin(admin.ModelAdmin):
     """Настройки администраторской панели для кинопроизведений."""
 
-    inlines = (GenreFilmworkInline,)
+    inlines = (
+        GenreFilmworkInline,
+        PersonFilmworkInline,
+    )
     fields = (
         'title',
         'description',
@@ -40,3 +76,12 @@ class FilmworkAdmin(admin.ModelAdmin):
         *TIMESTAMP_FIELDS,
     )
     readonly_fields = TIMESTAMP_FIELDS
+
+    list_display = (
+        'title',
+        'type',
+        'creation_date',
+        'rating',
+    )
+    list_filter = ('type',)
+    search_fields = ('title', 'description', 'id')

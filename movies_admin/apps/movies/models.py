@@ -7,6 +7,7 @@ from django.db import models
 
 GENRE_NAME_MAX_LENGTH = 255
 FILMWORK_TITLE_MAX_LENGTH = 255
+PERSON_FULLNAME_MAX_LENGTH = 255
 
 
 class UUIDMixin(models.Model):
@@ -48,6 +49,28 @@ class Genre(UUIDMixin, TimeStampedMixin):
         verbose_name_plural = 'Жанры'
 
 
+class Person(UUIDMixin, TimeStampedMixin):
+    """Персона."""
+
+    full_name = models.CharField(
+        'full_name',
+        max_length=PERSON_FULLNAME_MAX_LENGTH,
+    )
+
+    def __str__(self):
+        """Строковое представление модели.
+
+        Returns:
+            str: Полное имя
+        """
+        return self.full_name
+
+    class Meta:
+        db_table = 'content\".\"person'
+        verbose_name = 'Персона'
+        verbose_name_plural = 'Персоны'
+
+
 class Filmwork(UUIDMixin, TimeStampedMixin):
     """Кинопроизведения."""
 
@@ -67,6 +90,7 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
 
     # Связи
     genres = models.ManyToManyField(Genre, through='GenreFilmwork')
+    persons = models.ManyToManyField(Person, through='PersonFilmwork')
 
     def __str__(self):
         """Строковое представление модели.
@@ -91,3 +115,15 @@ class GenreFilmwork(UUIDMixin):
 
     class Meta:
         db_table = 'content\".\"genre_film_work'
+
+
+class PersonFilmwork(UUIDMixin):
+    """Промежуточная таблица для связи персон и кинопроизведений."""
+
+    film_work = models.ForeignKey('Filmwork', on_delete=models.CASCADE)
+    person = models.ForeignKey('Person', on_delete=models.CASCADE)
+    role = models.TextField('role')
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'content\".\"person_film_work'

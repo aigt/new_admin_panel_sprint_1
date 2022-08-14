@@ -7,6 +7,8 @@ per-file-ignores =
   movies_admin/*/migrations/*.py: WPS102, WPS114, WPS432
   # Found upper-case constant in a class - Для choise'ов
   movies_admin/apps/*/models.py: WPS115
+  # 
+  movies_admin/apps/*/admin.py: WPS226, I001, I005
 
 # Excluding some directories:
 exclude = .git,__pycache__,venv,.eggs,*.egg,manage.py
