@@ -2,18 +2,10 @@ from django.contrib import admin
 
 from movies_admin.apps.movies.models import Filmwork, Genre, GenreFilmwork
 
-
-class TimeStampMixins:
-    """Миксин с датами создания и модификации."""
-
-    fields = (
-        'created',
-        'modified',
-    )
-    readonly_fields = (
-        'created',
-        'modified',
-    )
+TIMESTAMP_FIELDS = (
+    'created',
+    'modified',
+)
 
 
 @admin.register(Genre)
@@ -23,9 +15,9 @@ class GenreAdmin(admin.ModelAdmin):
     fields = (
         'name',
         'description',
-        *TimeStampMixins.fields,
+        *TIMESTAMP_FIELDS,
     )
-    readonly_fields = TimeStampMixins.readonly_fields
+    readonly_fields = TIMESTAMP_FIELDS
 
 
 class GenreFilmworkInline(admin.TabularInline):
@@ -45,6 +37,6 @@ class FilmworkAdmin(admin.ModelAdmin):
         'creation_date',
         'rating',
         'type',
-        *TimeStampMixins.fields,
+        *TIMESTAMP_FIELDS,
     )
-    readonly_fields = TimeStampMixins.readonly_fields
+    readonly_fields = TIMESTAMP_FIELDS
