@@ -45,6 +45,7 @@ class GenreFilmworkInline(admin.TabularInline):
     """Настройки вложенной формы связи жанры-кинопроизведения."""
 
     model = models.GenreFilmwork
+    fields = ('genre',)
     raw_id_fields = ('genre',)
 
 
