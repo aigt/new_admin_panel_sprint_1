@@ -1,12 +1,8 @@
+"""Настройки администраторской панели."""
+
 from django.contrib import admin
 
-from movies_admin.apps.movies.models import (
-    Filmwork,
-    Genre,
-    GenreFilmwork,
-    Person,
-    PersonFilmwork,
-)
+from movies_admin.apps.movies.models import models
 
 TIMESTAMP_FIELDS = (
     'created',
@@ -14,7 +10,7 @@ TIMESTAMP_FIELDS = (
 )
 
 
-@admin.register(Genre)
+@admin.register(models.Genre)
 class GenreAdmin(admin.ModelAdmin):
     """Настройки администраторской панели для жанров."""
 
@@ -32,7 +28,7 @@ class GenreAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description', 'id')
 
 
-@admin.register(Person)
+@admin.register(models.Person)
 class PersonAdmin(admin.ModelAdmin):
     """Настройки администраторской панели для персон."""
 
@@ -48,18 +44,18 @@ class PersonAdmin(admin.ModelAdmin):
 class GenreFilmworkInline(admin.TabularInline):
     """Настройки вложенной формы связи жанры-кинопроизведения."""
 
-    model = GenreFilmwork
+    model = models.GenreFilmwork
     raw_id_fields = ('genre',)
 
 
 class PersonFilmworkInline(admin.TabularInline):
     """Настройки вложенной формы связи персоны-кинопроизведения."""
 
-    model = PersonFilmwork
+    model = models.PersonFilmwork
     raw_id_fields = ('person',)
 
 
-@admin.register(Filmwork)
+@admin.register(models.Filmwork)
 class FilmworkAdmin(admin.ModelAdmin):
     """Настройки администраторской панели для кинопроизведений."""
 
