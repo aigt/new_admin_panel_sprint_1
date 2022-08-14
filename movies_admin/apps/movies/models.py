@@ -88,6 +88,17 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
         validators=(MinValueValidator(0), MaxValueValidator(100)),
     )
     type = models.TextField(_('type'), choices=Type.choices)
+    certificate = models.CharField(
+        _('certificate'),
+        max_length=512,  # noqa: WPS432
+        blank=True,
+    )
+    file_path = models.FileField(
+        _('file'),
+        blank=True,
+        null=True,
+        upload_to='movies/',
+    )
 
     # Связи
     genres = models.ManyToManyField(Genre, through='GenreFilmwork')
