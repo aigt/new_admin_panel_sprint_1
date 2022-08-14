@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from movies_admin.apps.movies.models import models
+from movies_admin.apps.movies import models
 
 TIMESTAMP_FIELDS = (
     'created',
