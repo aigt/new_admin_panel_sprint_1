@@ -1,7 +1,9 @@
 """Файл содержит настройки для продакшена."""
+
 import os
 
 DEBUG = False
+
 
 ALLOWED_HOSTS = [
     # TODO: check production hosts

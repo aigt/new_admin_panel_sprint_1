@@ -1,4 +1,4 @@
-"""This is a django-split-settings main file."""
+"""Главный файл распределённых настроек."""
 
 from os import environ
 from pathlib import Path
@@ -6,26 +6,35 @@ from pathlib import Path
 from dotenv import load_dotenv
 from split_settings.tools import include, optional
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Директория приложения
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+
+# Загрузка настроек в окружение
 load_dotenv(dotenv_path=BASE_DIR.joinpath('config/.env'))
 
 
-# Managing environment via `DJANGO_ENV` variable:
-# To change settings file:
+# Управление средой исполнения через переменную окружения `DJANGO_ENV`:
+# Чтобы запустить другую среду:
 # `DJANGO_ENV=production python manage.py runserver`
 environ.setdefault('DJANGO_ENV', 'development')
+
+
 _ENV = environ['DJANGO_ENV']
 
+
+# Список файлов по которым распределены настройки
 _base_settings = (
     'components/common.py',
     'components/database.py',
+    'templates.py',
+    'internationalization.py',
     # Выбор настроек environment:
     'environments/{0}.py'.format(_ENV),
     # Опционально перезапись отдельных настроек:
     optional('environments/local.py'),
 )
 
-# Include settings:
+
+# Загрузка настроек
 include(*_base_settings)
