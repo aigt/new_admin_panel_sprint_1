@@ -9,9 +9,15 @@ per-file-ignores =
   movies_admin/apps/*/admin.py: WPS226
   #
   sqlite_to_postgres/settings.py: WPS407
+  #
+  sqlite_to_postgres/carrier.py: WPS457
+  #
+  sqlite_to_postgres/reader.py: DAR202
+  #
+  sqlite_to_postgres/writer.py: DAR202
 
 # Excluding some directories:
 exclude = .git,__pycache__,venv,.eggs,*.egg,manage.py,movies_admin/*/migrations/*.py
 
 # Disable some pydocstyle checks:
-ignore = D100, D104, D106, D401, X100, W504, RST303, RST304, DAR103, DAR203, WPS306, WPS431, WPS316, E800
+ignore = D100, D104, D106, D401, X100, W504, RST303, RST304, DAR103, DAR203, WPS306, WPS431, WPS316, WPS305
