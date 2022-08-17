@@ -133,12 +133,6 @@ class GenreFilmwork(UUIDMixin):
                 name='film_work_genre_idx',
             ),
         )
-        indexes = (
-            models.Index(
-                fields=['film_work', 'genre'],
-                name='film_work_genre_idx',
-            ),
-        )
 
 
 class PersonFilmwork(UUIDMixin):
