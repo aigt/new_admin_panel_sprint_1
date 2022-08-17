@@ -1,19 +1,23 @@
-import sqlite3
+import asyncio
 
-# Задаём путь к файлу с базой данных
-db_path = 'sqlite_to_postgres/db.sqlite'
-# Устанавливаем соединение с БД
-conn = sqlite3.connect(db_path)
-# По-умолчанию SQLite возвращает строки в виде кортежа значений.
-# Эта строка указывает, что данные должны быть в формате «ключ-значение»
-conn.row_factory = sqlite3.Row
-# Получаем курсор
-curs = conn.cursor()
-# Формируем запрос. Внутри execute находится обычный SQL-запрос
-curs.execute('SELECT * FROM film_work;')
-# Получаем данные
-selected_data = curs.fetchall()
-# Рассматриваем первую запись
-print(dict(selected_data[0]))
-# Разрываем соединение с БД
-conn.close()
+import aiosqlite
+
+from sqlite_to_postgres import sqlite_conn_context
+
+
+async def show():
+    """Отобразить таблицу БД."""
+    db_path = 'sqlite_to_postgres/db.sqlite'
+
+    async with sqlite_conn_context.conn_context(db_path) as conn:
+        print(conn)
+        conn.row_factory = aiosqlite.Row
+        async with conn.execute('SELECT * FROM film_work;') as curs:
+            # Получаем данные
+            selected_data = await curs.fetchall()
+            # Рассматриваем первую запись
+            print(dict(selected_data[0]))
+
+
+if __name__ == '__main__':
+    asyncio.run(show())

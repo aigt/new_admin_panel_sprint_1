@@ -13,6 +13,6 @@ async def conn_context(db_path: str):
     Yields:
         Connection: соединение с БД
     """
-    conn = aiosqlite.connect(db_path)
+    conn = await aiosqlite.connect(db_path)
     yield conn
-    conn.close()
+    await conn.close()
