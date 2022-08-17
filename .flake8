@@ -17,6 +17,8 @@ per-file-ignores =
   sqlite_to_postgres/writer.py: DAR202
   #
   sqlite_to_postgres/tools/select_table.py: WPS421
+  #
+  sqlite_to_postgres/models.py: D105, WPS358
 
 # Excluding some directories:
 exclude = .git,__pycache__,venv,.eggs,*.egg,manage.py,movies_admin/*/migrations/*.py
