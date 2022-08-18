@@ -2,7 +2,9 @@ import asyncio
 
 import aiosqlite
 
-from sqlite_to_postgres import sqlite_conn_context
+from sqlite_to_postgres import reader, sqlite_conn_context
+
+ROWS_PER_READ = 20
 
 
 async def show():
@@ -19,5 +21,13 @@ async def show():
             print(dict(selected_data[0]))
 
 
+async def show2():
+    """Отобразить таблицу БД с помощью ридера и моделей."""
+    db_path = 'sqlite_to_postgres/db.sqlite'
+    fwr = reader.FilmworkReader(db_path, size=ROWS_PER_READ)
+    async for fw_models in fwr.read():
+        print(*fw_models, sep='\n\n', end='\n\n**************\n\n')
+
+
 if __name__ == '__main__':
-    asyncio.run(show())
+    asyncio.run(show2())

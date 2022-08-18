@@ -40,6 +40,7 @@ class Filmwork:
     description: str
     creation_date: datetime.datetime
     type: str
+    file_path: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
     rating: float = field(default=0.0)
