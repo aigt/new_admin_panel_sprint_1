@@ -12,7 +12,7 @@ per-file-ignores =
   #
   sqlite_to_postgres/carrier.py: WPS457
   #
-  sqlite_to_postgres/reader.py: DAR202
+  sqlite_to_postgres/reader.py: DAR202, WPS214, RST301
   #
   sqlite_to_postgres/writer.py: DAR202
   #
