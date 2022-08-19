@@ -1,8 +1,11 @@
 import asyncio
+import datetime
+import uuid
 
 import aiosqlite
+import asyncpg
 
-from sqlite_to_postgres import reader, sqlite_conn_context
+from sqlite_to_postgres import reader, settings, sqlite_conn_context
 
 ROWS_PER_READ = 20
 
@@ -29,5 +32,35 @@ async def show2():
         print(*fw_models, sep='\n\n', end='\n\n**************\n\n')
 
 
+async def insert_values():
+    """Записать в таблицу тестовые данные."""
+    dbs = settings.DATABASES['pg']
+    conn = await asyncpg.connect(**dbs)
+
+    # Insert a record into the created table.
+    await conn.execute(
+        """INSERT INTO film_work(
+            id,
+            title,
+            description,
+            creation_date,
+            rating,
+            type,
+            created,
+            modified
+        )
+        VALUES($1, $2, $3, $4, $5, $6, $7, $8);""",
+        str(uuid.uuid4()),
+        'Название',
+        'Описание',
+        datetime.datetime.today(),
+        5.6,  # noqa: WPS432
+        'tv_show',
+        datetime.datetime.utcnow(),
+        datetime.datetime.utcnow(),
+    )
+    await conn.close()
+
+
 if __name__ == '__main__':
-    asyncio.run(show2())
+    asyncio.run(insert_values())
