@@ -30,10 +30,8 @@ async def _read(
         queue (asyncio.Queue): очередь
         db_reader (reader.Reader): читатель из БД
     """
-    data_pack = db_reader.read()
-    while data_pack:
+    async for data_pack in db_reader.read():
         await queue.put(data_pack)
-        data_pack = db_reader.read()
 
 
 async def _write(
