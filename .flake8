@@ -14,7 +14,7 @@ per-file-ignores =
   #
   sqlite_to_postgres/reader.py: DAR202, WPS214, RST301
   #
-  sqlite_to_postgres/writer.py: DAR202
+  sqlite_to_postgres/writer.py: DAR202, WPS112, WPS462, WPS227
   #
   sqlite_to_postgres/tools/select_table.py: WPS421, WPS462
   #
