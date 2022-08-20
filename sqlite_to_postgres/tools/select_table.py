@@ -4,6 +4,7 @@ import uuid
 
 import aiosqlite
 
+from sqlite_to_postgres.copier import copier
 from sqlite_to_postgres.db import models, sqlite_conn_context
 from sqlite_to_postgres.settings import conf_readers, conf_writers, settings
 
@@ -51,5 +52,22 @@ async def insert_values():
         await db_writer.write([model])
 
 
+async def copy():
+    """Копирование из одной базы в другую."""
+    db_path = 'sqlite_to_postgres/db.sqlite'
+    db_reader = conf_readers.FilmworkReader(db_path, size=ROWS_PER_READ)
+
+    dbs = settings.DATABASES['pg']
+    db_writer = conf_writers.FilmworkWriter(dbs)
+
+    jobs = (
+        copier.CarryJob(
+            reader=db_reader,
+            writer=db_writer,
+        ),
+    )
+    await copier.carry_over(jobs)
+
+
 if __name__ == '__main__':
-    asyncio.run(insert_values())
+    asyncio.run(copy())

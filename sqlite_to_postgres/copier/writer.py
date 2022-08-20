@@ -1,4 +1,5 @@
 import abc
+import logging
 from contextlib import asynccontextmanager
 from typing import Any
 
@@ -34,10 +35,13 @@ class Writer(abc.ABC):
         Args:
             data_pack: набор строк для записи
         """
-        await self.__conn.executemany(
-            self._query,
-            list(map(self._model_as_tuple, data_pack)),
-        )
+        try:
+            await self.__conn.executemany(
+                self._query,
+                list(map(self._model_as_tuple, data_pack)),
+            )
+        except Exception as exception:
+            logging.exception(exception)
 
     @property
     @abc.abstractmethod

@@ -38,7 +38,7 @@ class Filmwork:
 
     title: str
     description: str
-    creation_date: datetime.datetime
+    creation_date: datetime.date | None
     type: str
     file_path: str
     created_at: datetime.datetime
