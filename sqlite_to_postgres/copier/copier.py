@@ -43,11 +43,10 @@ async def _write(
         queue (asyncio.Queue): очередь
         db_writer (writer.Writer): писатель в БД
     """
-    async with db_writer.create_writing_context():
-        while True:
-            data_pack = await queue.get()
-            await db_writer.write(data_pack)
-            queue.task_done()
+    while True:
+        data_pack = await queue.get()
+        await db_writer.write(data_pack)
+        queue.task_done()
 
 
 async def _produce_job(job: CarryJob) -> None:

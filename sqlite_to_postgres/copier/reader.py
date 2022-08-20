@@ -4,21 +4,17 @@ from typing import Any
 
 import aiosqlite
 
-from sqlite_to_postgres.db import sqlite_conn_context
-
 
 class Reader(abc.ABC):
     """Абстрактный класс-читатель таблицы из БД."""
 
-    def __init__(self, db_path: str, *, size=1) -> None:
+    def __init__(self, *, size=1) -> None:
         """Конструктор.
 
         Args:
-            db_path (str): Путь к БД.
             size (int, optional): Количество считываемых рядов за раз. По
                                   умолчанию = 1.
         """
-        self.__db_path = db_path  # noqa: WPS112
         self.__size = size
 
     async def read(self) -> list[Any]:
@@ -27,14 +23,21 @@ class Reader(abc.ABC):
         Yields:
             list[Any]: считанный набор строк
         """
-        async with sqlite_conn_context.conn_context(self.__db_path) as conn:
-            conn.row_factory = self._row_factory
-            async with conn.execute(self._fetch_query) as curs:
-                curs.arraysize = int(self.__size)
+        self.__conn.row_factory = self._row_factory
+        async with self.__conn.execute(self._fetch_query) as curs:
+            curs.arraysize = int(self.__size)
+            selected_data = await curs.fetchmany()
+            while selected_data:
+                yield selected_data
                 selected_data = await curs.fetchmany()
-                while selected_data:
-                    yield selected_data
-                    selected_data = await curs.fetchmany()
+
+    def set_connection(self, conn: aiosqlite.Connection):
+        """Задать соединение с БД.
+
+        Args:
+            conn (aiosqlite.Connection): соединение
+        """
+        self.__conn = conn
 
     def _build_attrs(
         self,

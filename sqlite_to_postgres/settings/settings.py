@@ -35,42 +35,27 @@ DATABASES = {
 JOBS = (
     # Перенос таблицы кинопроизведений
     copier.CarryJob(
-        reader=conf_readers.FilmworkReader(
-            DATABASES['sqlite']['db_path'],
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.FilmworkWriter(DATABASES['pg']),
+        reader=conf_readers.FilmworkReader(size=ROWS_PER_READ),
+        writer=conf_writers.FilmworkWriter(),
     ),
     # Перенос таблицы персон
     copier.CarryJob(
-        reader=conf_readers.PersonReader(
-            DATABASES['sqlite']['db_path'],
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.PersonWriter(DATABASES['pg']),
+        reader=conf_readers.PersonReader(size=ROWS_PER_READ),
+        writer=conf_writers.PersonWriter(),
     ),
     # Перенос таблицы жанров
     copier.CarryJob(
-        reader=conf_readers.GenreReader(
-            DATABASES['sqlite']['db_path'],
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.GenreWriter(DATABASES['pg']),
+        reader=conf_readers.GenreReader(size=ROWS_PER_READ),
+        writer=conf_writers.GenreWriter(),
     ),
     # Перенос таблицы связи персон и кинопроизведений
     copier.CarryJob(
-        reader=conf_readers.PersonFilmworkReader(
-            DATABASES['sqlite']['db_path'],
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.PersonFilmworkWriter(DATABASES['pg']),
+        reader=conf_readers.PersonFilmworkReader(size=ROWS_PER_READ),
+        writer=conf_writers.PersonFilmworkWriter(),
     ),
     # Перенос таблицы связи жанров и кинопроизведений
     copier.CarryJob(
-        reader=conf_readers.GenreFilmworkReader(
-            DATABASES['sqlite']['db_path'],
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.GenreFilmworkWriter(DATABASES['pg']),
+        reader=conf_readers.GenreFilmworkReader(size=ROWS_PER_READ),
+        writer=conf_writers.GenreFilmworkWriter(),
     ),
 )

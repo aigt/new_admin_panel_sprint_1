@@ -1,33 +1,20 @@
 import abc
 import logging
-from contextlib import asynccontextmanager
 from typing import Any
 
-from sqlite_to_postgres.db import pg_conn_context
+import asyncpg
 
 
 class Writer(abc.ABC):
     """Абстрактный класс-писатель в таблицу БД."""
 
-    def __init__(self, db_settings: dict) -> None:
-        """Конструктор.
+    def set_connection(self, conn: asyncpg.Connection):
+        """Задать соединение с БД.
 
         Args:
-            db_settings (dict): Настройки БД
+            conn (aiosqlite.Connection): соединение
         """
-        super().__init__()
-        self.__db_settings = db_settings
-
-    @asynccontextmanager
-    async def create_writing_context(self):
-        """Создать контекст режима записи.
-
-        Yields:
-            Writer: собственный экземпляр со включенным режимом записи
-        """
-        async with pg_conn_context.conn_context(self.__db_settings) as conn:
-            self.__conn = conn
-            yield self
+        self.__conn = conn
 
     async def write(self, data_pack: list[Any]) -> None:
         """Писать набор строк в БД.
