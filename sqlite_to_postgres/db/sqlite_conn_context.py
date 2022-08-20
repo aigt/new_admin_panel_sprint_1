@@ -14,5 +14,7 @@ async def conn_context(db_path: str):
         Connection: соединение с БД
     """
     conn = await aiosqlite.connect(db_path)
-    yield conn
-    await conn.close()
+    try:
+        yield conn
+    finally:
+        await conn.close()

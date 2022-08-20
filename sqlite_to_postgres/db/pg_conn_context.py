@@ -14,5 +14,7 @@ async def conn_context(db_settings: dict):
         Connection: соединение с БД
     """
     conn = await asyncpg.connect(**db_settings)
-    yield conn
-    await conn.close()
+    try:
+        yield conn
+    finally:
+        await conn.close()
