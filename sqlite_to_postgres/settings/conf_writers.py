@@ -52,3 +52,44 @@ class FilmworkWriter(writer.Writer):
             created,
             modified,
         )
+
+
+class PersonWriter(writer.Writer):
+    """Класс-писатель для записи персон в таблицу БД."""
+
+    @property
+    def _query(self) -> None:
+        return """INSERT INTO content.person(
+                id,
+                full_name,
+                created,
+                modified
+            )
+            VALUES($1, $2, $3, $4)
+            ON CONFLICT (id) DO NOTHING;"""
+
+    def _model_as_tuple(self, model: models.Person):
+        try:
+            created = datetime.datetime.strptime(
+                model.created_at,
+                '%Y-%m-%d %H:%M:%S.%f+00',
+            )
+        except Exception as c_ex:
+            logging.exception(c_ex, 'model.created_at', model.created_at)
+            created = None
+
+        try:
+            modified = datetime.datetime.strptime(
+                model.updated_at,
+                '%Y-%m-%d %H:%M:%S.%f+00',
+            )
+        except Exception as u_ex:
+            logging.exception(u_ex, 'model.updated_at', model.updated_at)
+            modified = None
+
+        return (
+            model.id,
+            model.full_name,
+            created,
+            modified,
+        )

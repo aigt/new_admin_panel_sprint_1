@@ -3,12 +3,19 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from sqlite_to_postgres.copier import copier
+from sqlite_to_postgres.settings import conf_readers, conf_writers
+
 # Директория приложения
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Загрузка настроек в окружение
 load_dotenv(dotenv_path=BASE_DIR.joinpath('config/.env'))
+
+
+# Количество записей обрабатываемых за раз
+ROWS_PER_READ = 100
 
 
 DATABASES = {
@@ -23,3 +30,23 @@ DATABASES = {
         'db_path': 'sqlite_to_postgres/db.sqlite',
     },
 }
+
+
+JOBS = (
+    # Перенос таблицы кинопроизведений
+    copier.CarryJob(
+        reader=conf_readers.FilmworkReader(
+            DATABASES['sqlite']['db_path'],
+            size=ROWS_PER_READ,
+        ),
+        writer=conf_writers.FilmworkWriter(DATABASES['pg']),
+    ),
+    # Перенос таблицы персон
+    copier.CarryJob(
+        reader=conf_readers.PersonReader(
+            DATABASES['sqlite']['db_path'],
+            size=ROWS_PER_READ,
+        ),
+        writer=conf_writers.PersonWriter(DATABASES['pg']),
+    ),
+)

@@ -55,10 +55,10 @@ async def insert_values():
 async def copy():
     """Копирование из одной базы в другую."""
     db_path = 'sqlite_to_postgres/db.sqlite'
-    db_reader = conf_readers.FilmworkReader(db_path, size=ROWS_PER_READ)
+    db_reader = conf_readers.PersonReader(db_path, size=ROWS_PER_READ)
 
     dbs = settings.DATABASES['pg']
-    db_writer = conf_writers.FilmworkWriter(dbs)
+    db_writer = conf_writers.PersonWriter(dbs)
 
     jobs = (
         copier.CarryJob(
