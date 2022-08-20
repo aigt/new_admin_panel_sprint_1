@@ -38,3 +38,19 @@ class PersonReader(reader.Reader):
     @property
     def _fetch_query(self) -> str:
         return 'SELECT * FROM "person";'
+
+
+class GenreReader(reader.Reader):
+    """Читатель таблицы жанров."""
+
+    def _row_factory(
+        self,
+        cursor: aiosqlite.Cursor,
+        row: tuple[Any],
+    ) -> models.Person:
+        attrs = self._build_attrs(cursor, row)
+        return models.Genre(**attrs)
+
+    @property
+    def _fetch_query(self) -> str:
+        return 'SELECT * FROM genre;'
