@@ -8,8 +8,7 @@ import asyncio
 from dataclasses import dataclass
 from typing import Iterable
 
-import reader
-import writer
+from sqlite_to_postgres.copier import reader, writer
 
 
 @dataclass(frozen=True, slots=True)

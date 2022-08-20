@@ -4,15 +4,10 @@ import uuid
 
 import aiosqlite
 
-from sqlite_to_postgres import (  # isort:skip
-    reader,
-    settings,
-    sqlite_conn_context,
-    writer,
-    models,
-)
+from sqlite_to_postgres.db import models, sqlite_conn_context
+from sqlite_to_postgres.settings import conf_readers, conf_writers, settings
 
-ROWS_PER_READ = 20
+ROWS_PER_READ = 5
 
 
 async def show():
@@ -32,7 +27,7 @@ async def show():
 async def show2():
     """Отобразить таблицу БД с помощью ридера и моделей."""
     db_path = 'sqlite_to_postgres/db.sqlite'
-    fwr = reader.FilmworkReader(db_path, size=ROWS_PER_READ)
+    fwr = conf_readers.FilmworkReader(db_path, size=ROWS_PER_READ)
     async for fw_models in fwr.read():
         print(*fw_models, sep='\n\n', end='\n\n**************\n\n')
 
@@ -51,7 +46,7 @@ async def insert_values():
         created_at=datetime.datetime.utcnow(),
         updated_at=datetime.datetime.utcnow(),
     )
-    db_writer = writer.FilmworkWriter(dbs)
+    db_writer = conf_writers.FilmworkWriter(dbs)
     await db_writer.write([model])
 
 

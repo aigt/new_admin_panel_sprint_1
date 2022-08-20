@@ -43,7 +43,7 @@ class Filmwork:
     file_path: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
-    rating: float = field(default=0.0)
+    rating: float = field(default=0.0)  # noqa: WPS358
     id: uuid.UUID = field(default_factory=uuid.uuid4)
 
     def __iter__(self):
