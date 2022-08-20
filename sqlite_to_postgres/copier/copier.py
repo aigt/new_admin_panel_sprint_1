@@ -84,4 +84,4 @@ async def carry_over(jobs: Iterable[CarryJob]) -> None:
     """
     # Копирование каждой таблицы выполняется как отдельная работа
     for job in jobs:
-        _produce_job(job)
+        await _produce_job(job)
