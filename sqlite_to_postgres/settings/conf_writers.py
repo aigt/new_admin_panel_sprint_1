@@ -140,3 +140,69 @@ class GenreWriter(writer.Writer):
             created,
             modified,
         )
+
+
+class PersonFilmworkWriter(writer.Writer):
+    """Писатель для записи связи персон и кинопроизведений в таблицу БД."""
+
+    @property
+    def _query(self) -> None:
+        return """INSERT INTO content.person_film_work(
+                id,
+                film_work_id,
+                person_id,
+                role,
+                created
+            )
+            VALUES($1, $2, $3, $4, $5)
+            ON CONFLICT (id) DO NOTHING;"""
+
+    def _model_as_tuple(self, model: models.PersonFilmwork):
+        try:
+            created = datetime.datetime.strptime(
+                model.created_at,
+                '%Y-%m-%d %H:%M:%S.%f+00',
+            )
+        except Exception as c_ex:
+            logging.exception(c_ex, 'model.created_at', model.created_at)
+            created = None
+
+        return (
+            model.id,
+            model.film_work_id,
+            model.person_id,
+            model.role,
+            created,
+        )
+
+
+class GenreFilmworkWriter(writer.Writer):
+    """Писатель для записи связи жанров и кинопроизведений в таблицу БД."""
+
+    @property
+    def _query(self) -> None:
+        return """INSERT INTO content.genre_film_work(
+                id,
+                film_work_id,
+                genre_id,
+                created
+            )
+            VALUES($1, $2, $3, $4)
+            ON CONFLICT (id) DO NOTHING;"""
+
+    def _model_as_tuple(self, model: models.GenreFilmwork):
+        try:
+            created = datetime.datetime.strptime(
+                model.created_at,
+                '%Y-%m-%d %H:%M:%S.%f+00',
+            )
+        except Exception as c_ex:
+            logging.exception(c_ex, 'model.created_at', model.created_at)
+            created = None
+
+        return (
+            model.id,
+            model.film_work_id,
+            model.genre_id,
+            created,
+        )

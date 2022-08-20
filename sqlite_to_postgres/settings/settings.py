@@ -49,4 +49,28 @@ JOBS = (
         ),
         writer=conf_writers.PersonWriter(DATABASES['pg']),
     ),
+    # Перенос таблицы жанров
+    copier.CarryJob(
+        reader=conf_readers.GenreReader(
+            DATABASES['sqlite']['db_path'],
+            size=ROWS_PER_READ,
+        ),
+        writer=conf_writers.GenreWriter(DATABASES['pg']),
+    ),
+    # Перенос таблицы связи персон и кинопроизведений
+    copier.CarryJob(
+        reader=conf_readers.PersonFilmworkReader(
+            DATABASES['sqlite']['db_path'],
+            size=ROWS_PER_READ,
+        ),
+        writer=conf_writers.PersonFilmworkWriter(DATABASES['pg']),
+    ),
+    # Перенос таблицы связи жанров и кинопроизведений
+    copier.CarryJob(
+        reader=conf_readers.GenreFilmworkReader(
+            DATABASES['sqlite']['db_path'],
+            size=ROWS_PER_READ,
+        ),
+        writer=conf_writers.GenreFilmworkWriter(DATABASES['pg']),
+    ),
 )

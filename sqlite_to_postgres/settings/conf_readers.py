@@ -54,3 +54,35 @@ class GenreReader(reader.Reader):
     @property
     def _fetch_query(self) -> str:
         return 'SELECT * FROM genre;'
+
+
+class PersonFilmworkReader(reader.Reader):
+    """Читатель таблицы связи персон и кинопроизведений."""
+
+    def _row_factory(
+        self,
+        cursor: aiosqlite.Cursor,
+        row: tuple[Any],
+    ) -> models.Person:
+        attrs = self._build_attrs(cursor, row)
+        return models.PersonFilmwork(**attrs)
+
+    @property
+    def _fetch_query(self) -> str:
+        return 'SELECT * FROM person_film_work;'
+
+
+class GenreFilmworkReader(reader.Reader):
+    """Читатель таблицы связи жанров и кинопроизведений."""
+
+    def _row_factory(
+        self,
+        cursor: aiosqlite.Cursor,
+        row: tuple[Any],
+    ) -> models.Person:
+        attrs = self._build_attrs(cursor, row)
+        return models.GenreFilmwork(**attrs)
+
+    @property
+    def _fetch_query(self) -> str:
+        return 'SELECT * FROM genre_film_work;'
