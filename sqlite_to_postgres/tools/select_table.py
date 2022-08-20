@@ -47,7 +47,8 @@ async def insert_values():
         updated_at=datetime.datetime.utcnow(),
     )
     db_writer = conf_writers.FilmworkWriter(dbs)
-    await db_writer.write([model])
+    async with db_writer.create_writing_context():
+        await db_writer.write([model])
 
 
 if __name__ == '__main__':
