@@ -2,7 +2,7 @@
 
 import datetime
 import uuid
-from dataclasses import astuple, dataclass, field
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True, slots=True)
@@ -15,9 +15,6 @@ class Genre:
     updated_at: datetime.datetime
     id: uuid.UUID = field(default_factory=uuid.uuid4)
 
-    def __iter__(self):
-        return iter(astuple(self))
-
 
 @dataclass(frozen=True, slots=True)
 class Person:
@@ -27,9 +24,6 @@ class Person:
     created_at: datetime.datetime
     updated_at: datetime.datetime
     id: uuid.UUID = field(default_factory=uuid.uuid4)
-
-    def __iter__(self):
-        return iter(astuple(self))
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,9 +40,6 @@ class Filmwork:
     rating: float = field(default=0.0)  # noqa: WPS358
     id: uuid.UUID = field(default_factory=uuid.uuid4)
 
-    def __iter__(self):
-        return iter(astuple(self))
-
 
 @dataclass(frozen=True, slots=True)
 class GenreFilmwork:
@@ -58,9 +49,6 @@ class GenreFilmwork:
     genre_id: uuid.UUID
     created_at: datetime.datetime
     id: uuid.UUID = field(default_factory=uuid.uuid4)
-
-    def __iter__(self):
-        return iter(astuple(self))
 
 
 @dataclass(frozen=True, slots=True)
@@ -72,6 +60,3 @@ class PersonFilmwork:
     role: str
     created_at: datetime.datetime
     id: uuid.UUID = field(default_factory=uuid.uuid4)
-
-    def __iter__(self):
-        return iter(astuple(self))
