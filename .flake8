@@ -20,7 +20,7 @@ per-file-ignores =
   #
   sqlite_to_postgres/db/models.py: D105, D105
   #
-  sqlite_to_postgres/settings/conf_writers.py: WPS462, WPS227, WPS226
+  sqlite_to_postgres/settings/conf_writers.py: WPS462, WPS227, WPS226, WPS336
 
 # Excluding some directories:
 exclude = .git,__pycache__,venv,.eggs,*.egg,manage.py,movies_admin/*/migrations/*.py,sqlite_to_postgres/tests/*.py

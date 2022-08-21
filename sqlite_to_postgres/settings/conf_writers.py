@@ -26,8 +26,8 @@ class FilmworkWriter(writer.Writer):
     def _model_as_tuple(self, model: models.Filmwork):
         try:
             created = datetime.datetime.strptime(
-                model.created_at,
-                '%Y-%m-%d %H:%M:%S.%f+00',
+                model.created_at + '00',
+                '%Y-%m-%d %H:%M:%S.%f%z',
             )
         except Exception as c_ex:
             logging.exception(c_ex, 'model.created_at', model.created_at)
@@ -35,8 +35,8 @@ class FilmworkWriter(writer.Writer):
 
         try:
             modified = datetime.datetime.strptime(
-                model.updated_at,
-                '%Y-%m-%d %H:%M:%S.%f+00',
+                model.updated_at + '00',
+                '%Y-%m-%d %H:%M:%S.%f%z',
             )
         except Exception as u_ex:
             logging.exception(u_ex, 'model.updated_at', model.updated_at)
@@ -71,8 +71,8 @@ class PersonWriter(writer.Writer):
     def _model_as_tuple(self, model: models.Person):
         try:
             created = datetime.datetime.strptime(
-                model.created_at,
-                '%Y-%m-%d %H:%M:%S.%f+00',
+                model.created_at + '00',
+                '%Y-%m-%d %H:%M:%S.%f%z',
             )
         except Exception as c_ex:
             logging.exception(c_ex, 'model.created_at', model.created_at)
@@ -80,8 +80,8 @@ class PersonWriter(writer.Writer):
 
         try:
             modified = datetime.datetime.strptime(
-                model.updated_at,
-                '%Y-%m-%d %H:%M:%S.%f+00',
+                model.updated_at + '00',
+                '%Y-%m-%d %H:%M:%S.%f%z',
             )
         except Exception as u_ex:
             logging.exception(u_ex, 'model.updated_at', model.updated_at)
@@ -113,8 +113,8 @@ class GenreWriter(writer.Writer):
     def _model_as_tuple(self, model: models.Genre):
         try:
             created = datetime.datetime.strptime(
-                model.created_at,
-                '%Y-%m-%d %H:%M:%S.%f+00',
+                model.created_at + '00',
+                '%Y-%m-%d %H:%M:%S.%f%z',
             )
         except Exception as c_ex:
             logging.exception(c_ex, 'model.created_at', model.created_at)
@@ -122,8 +122,8 @@ class GenreWriter(writer.Writer):
 
         try:
             modified = datetime.datetime.strptime(
-                model.updated_at,
-                '%Y-%m-%d %H:%M:%S.%f+00',
+                model.updated_at + '00',
+                '%Y-%m-%d %H:%M:%S.%f%z',
             )
         except Exception as u_ex:
             logging.exception(u_ex, 'model.updated_at', model.updated_at)
@@ -160,8 +160,8 @@ class PersonFilmworkWriter(writer.Writer):
     def _model_as_tuple(self, model: models.PersonFilmwork):
         try:
             created = datetime.datetime.strptime(
-                model.created_at,
-                '%Y-%m-%d %H:%M:%S.%f+00',
+                model.created_at + '00',
+                '%Y-%m-%d %H:%M:%S.%f%z',
             )
         except Exception as c_ex:
             logging.exception(c_ex, 'model.created_at', model.created_at)
@@ -193,8 +193,8 @@ class GenreFilmworkWriter(writer.Writer):
     def _model_as_tuple(self, model: models.GenreFilmwork):
         try:
             created = datetime.datetime.strptime(
-                model.created_at,
-                '%Y-%m-%d %H:%M:%S.%f+00',
+                model.created_at + '00',
+                '%Y-%m-%d %H:%M:%S.%f%z',
             )
         except Exception as c_ex:
             logging.exception(c_ex, 'model.created_at', model.created_at)
