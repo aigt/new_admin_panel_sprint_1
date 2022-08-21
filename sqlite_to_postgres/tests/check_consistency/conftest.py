@@ -3,9 +3,9 @@ import sqlite3
 from pathlib import Path
 
 import psycopg2
-import psycopg2.extras
 import pytest
 from dotenv import load_dotenv
+from psycopg2.extras import RealDictCursor
 
 # Директория приложения
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -52,7 +52,7 @@ def lite_transaction(lite_conn_context: sqlite3.Connection):
 @pytest.fixture
 def pg_conn_context():
     dbs = DATABASES['pg']
-    conn = psycopg2.connect(**dbs)
+    conn = psycopg2.connect(**dbs, cursor_factory=RealDictCursor)
     try:
         yield conn
     finally:
@@ -61,7 +61,7 @@ def pg_conn_context():
 
 @pytest.fixture
 def pg_transaction(pg_conn_context):
-    curs = pg_conn_context.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    curs = pg_conn_context.cursor()
     try:
         yield curs
         pg_conn_context.commit()
