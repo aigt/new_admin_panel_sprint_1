@@ -37,7 +37,7 @@ async def _write(
     queue: asyncio.Queue,
     db_writer: writer.Writer,
 ) -> None:
-    """Читай данные из очереди и пиши из в БД.
+    """Читай данные из очереди и пиши их в БД.
 
     Args:
         queue (asyncio.Queue): очередь
