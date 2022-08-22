@@ -145,9 +145,9 @@ class PersonFilmwork(UUIDMixin):
 
     class Meta:
         db_table = 'content\".\"person_film_work'
-        indexes = (
-            models.Index(
-                fields=['film_work', 'person'],
+        constraints = (
+            models.UniqueConstraint(
+                fields=('film_work', 'person', 'role'),
                 name='film_work_person_idx',
             ),
         )
