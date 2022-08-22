@@ -5,8 +5,8 @@ import uuid
 import aiosqlite
 
 from sqlite_to_postgres.copier import copier, reader
-from sqlite_to_postgres.db import models, sqlite_conn_context
-from sqlite_to_postgres.settings import conf_readers, conf_writers, settings
+from sqlite_to_postgres.db import models, pg_conn_context, sqlite_conn_context
+from sqlite_to_postgres.settings import conf_writers, settings
 
 ROWS_PER_READ = 5
 
@@ -61,18 +61,28 @@ async def insert_values():
 async def copy():
     """Копирование из одной базы в другую."""
     db_path = 'sqlite_to_postgres/db.sqlite'
-    db_reader = conf_readers.GenreFilmworkReader(db_path, size=ROWS_PER_READ)
-
     dbs = settings.DATABASES['pg']
-    db_writer = conf_writers.GenreFilmworkWriter(dbs)
 
-    jobs = (
-        copier.CarryJob(
-            reader=db_reader,
-            writer=db_writer,
-        ),
-    )
-    await copier.carry_over(jobs)
+    async with (
+        sqlite_conn_context.conn_context(db_path) as read_conn,
+        pg_conn_context.conn_context(dbs) as write_conn,
+    ):
+
+        db_reader = reader.Reader(
+            'genre_film_work',
+            models.GenreFilmWork,
+            size=ROWS_PER_READ,
+        )
+
+        db_writer = conf_writers.GenreFilmworkWriter(dbs)
+
+        jobs = (
+            copier.CarryJob(
+                reader=db_reader,
+                writer=db_writer,
+            ),
+        )
+        await copier.carry_over(jobs, read_conn, write_conn)
 
 
 if __name__ == '__main__':

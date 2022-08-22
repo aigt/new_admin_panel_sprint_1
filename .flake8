@@ -16,7 +16,7 @@ per-file-ignores =
   #
   sqlite_to_postgres/copier/writer.py: DAR202, WPS112, WPS462
   #
-  sqlite_to_postgres/tools/select_table.py: WPS421, WPS462
+  sqlite_to_postgres/tools/select_table.py: WPS421, WPS462, WPS210
   #
   sqlite_to_postgres/db/models.py: D105, D105
   #
