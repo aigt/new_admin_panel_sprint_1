@@ -23,7 +23,7 @@ class FilmworkWriter(writer.Writer):
             VALUES($1, $2, $3, $4, $5, $6, $7, $8)
             ON CONFLICT (id) DO NOTHING;"""
 
-    def _model_as_tuple(self, model: models.Filmwork):
+    def _model_as_tuple(self, model: models.FilmWork):
         try:
             created = datetime.datetime.strptime(
                 model.created_at + '00',
@@ -157,7 +157,7 @@ class PersonFilmworkWriter(writer.Writer):
             VALUES($1, $2, $3, $4, $5)
             ON CONFLICT (id) DO NOTHING;"""
 
-    def _model_as_tuple(self, model: models.PersonFilmwork):
+    def _model_as_tuple(self, model: models.PersonFilmWork):
         try:
             created = datetime.datetime.strptime(
                 model.created_at + '00',
@@ -190,7 +190,7 @@ class GenreFilmworkWriter(writer.Writer):
             VALUES($1, $2, $3, $4)
             ON CONFLICT (id) DO NOTHING;"""
 
-    def _model_as_tuple(self, model: models.GenreFilmwork):
+    def _model_as_tuple(self, model: models.GenreFilmWork):
         try:
             created = datetime.datetime.strptime(
                 model.created_at + '00',

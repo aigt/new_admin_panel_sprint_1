@@ -6,16 +6,26 @@ import aiosqlite
 
 
 class Reader(abc.ABC):
-    """Абстрактный класс-читатель таблицы из БД."""
+    """Класс-читатель таблицы из БД."""
 
-    def __init__(self, *, size=1) -> None:
+    def __init__(
+        self,
+        table_name: str,
+        *,
+        schema,
+        size: int = 1,
+    ) -> None:
         """Конструктор.
 
         Args:
+            table_name (str): Имя читаемой таблицы
+            schema: Датакласс-схема данных
             size (int, optional): Количество считываемых рядов за раз. По
                                   умолчанию = 1.
         """
         self.__size = size
+        self.__table_name = table_name
+        self.__schema = schema
 
     async def read(self) -> list[Any]:
         """Читать набор строк из БД (количество определено в свойстве size).
@@ -24,7 +34,8 @@ class Reader(abc.ABC):
             list[Any]: считанный набор строк
         """
         self.__conn.row_factory = self._row_factory
-        async with self.__conn.execute(self._fetch_query) as curs:
+        fetch_query = 'SELECT * FROM {table};'.format(table=self.__table_name)
+        async with self.__conn.execute(fetch_query) as curs:
             curs.arraysize = self.__size
             while selected_data := await curs.fetchmany():
                 yield selected_data
@@ -37,28 +48,11 @@ class Reader(abc.ABC):
         """
         self.__conn = conn
 
-    def _build_attrs(
+    def _row_factory(
         self,
         cursor: aiosqlite.Cursor,
         row: tuple[Any],
-    ) -> dict:
-        """Фабрика преобразующая строки таблиц в словарь.
-
-        Args:
-            cursor (aiosqlite.Cursor): курсор базы данных
-            row (tuple[Any]): строка таблицы БД
-
-        Returns:
-            dict: словарь с атрибутами для создания класса
-        """
-        col_names = tuple(
-            map(itemgetter(0), cursor.description),
-        )
-
-        return {key: col_val for key, col_val in zip(col_names, row)}
-
-    @abc.abstractmethod
-    def _row_factory(self, cursor: aiosqlite.Cursor, row: tuple[Any]) -> Any:
+    ) -> Any:
         """Фабрика преобразующая строки таблиц в датакласс.
 
         Args:
@@ -68,8 +62,7 @@ class Reader(abc.ABC):
         Returns:
             Any: датакласс
         """
+        col_names = tuple(map(itemgetter(0), cursor.description))
+        attrs = {key: col_val for key, col_val in zip(col_names, row)}
 
-    @property
-    @abc.abstractmethod
-    def _fetch_query(self) -> str:
-        """Запрос к БД."""
+        return self.__schema(**attrs)

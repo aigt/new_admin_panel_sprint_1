@@ -27,7 +27,7 @@ class Person:
 
 
 @dataclass(frozen=True, slots=True)
-class Filmwork:
+class FilmWork:
     """Кинопроизведения."""
 
     title: str
@@ -42,7 +42,7 @@ class Filmwork:
 
 
 @dataclass(frozen=True, slots=True)
-class GenreFilmwork:
+class GenreFilmWork:
     """Промежуточная таблица для связи жанров и кинопроизведений."""
 
     film_work_id: uuid.UUID
@@ -52,7 +52,7 @@ class GenreFilmwork:
 
 
 @dataclass(frozen=True, slots=True)
-class PersonFilmwork:
+class PersonFilmWork:
     """Промежуточная таблица для связи персон и кинопроизведений."""
 
     person_id: uuid.UUID

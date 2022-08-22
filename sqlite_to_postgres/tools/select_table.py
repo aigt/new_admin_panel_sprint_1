@@ -4,7 +4,7 @@ import uuid
 
 import aiosqlite
 
-from sqlite_to_postgres.copier import copier
+from sqlite_to_postgres.copier import copier, reader
 from sqlite_to_postgres.db import models, sqlite_conn_context
 from sqlite_to_postgres.settings import conf_readers, conf_writers, settings
 
@@ -29,7 +29,11 @@ async def show2():
     """Отобразить таблицу БД с помощью ридера и моделей."""
     db_path = 'sqlite_to_postgres/db.sqlite'
     async with sqlite_conn_context.conn_context(db_path) as conn:
-        fwr = conf_readers.FilmworkReader(size=ROWS_PER_READ)
+        fwr = reader.Reader(
+            'genre',
+            schema=models.Genre,
+            size=ROWS_PER_READ,
+        )
         fwr.set_connection(conn)
         async for fw_models in fwr.read():
             print(*fw_models, sep='\n\n', end='\n\n**************\n\n')
@@ -38,7 +42,7 @@ async def show2():
 async def insert_values():
     """Записать в таблицу тестовые данные."""
     dbs = settings.DATABASES['pg']
-    model = models.Filmwork(
+    model = models.FilmWork(
         id=str(uuid.uuid4()),
         title='Название1',
         description='Описание2',

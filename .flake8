@@ -12,7 +12,7 @@ per-file-ignores =
   #
   sqlite_to_postgres/copier/copier.py: WPS457
   #
-  sqlite_to_postgres/copier/reader.py: DAR202, WPS214, RST301, WPS112, WPS332
+  sqlite_to_postgres/copier/reader.py: DAR202, WPS214, RST301, WPS112, WPS332, S608
   #
   sqlite_to_postgres/copier/writer.py: DAR202, WPS112, WPS462
   #

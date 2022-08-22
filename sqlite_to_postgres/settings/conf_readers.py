@@ -15,9 +15,9 @@ class FilmworkReader(reader.Reader):
         self,
         cursor: aiosqlite.Cursor,
         row: tuple[Any],
-    ) -> models.Filmwork:
+    ) -> models.FilmWork:
         attrs = self._build_attrs(cursor, row)
-        return models.Filmwork(**attrs)
+        return models.FilmWork(**attrs)
 
     @property
     def _fetch_query(self) -> str:
@@ -65,7 +65,7 @@ class PersonFilmworkReader(reader.Reader):
         row: tuple[Any],
     ) -> models.Person:
         attrs = self._build_attrs(cursor, row)
-        return models.PersonFilmwork(**attrs)
+        return models.PersonFilmWork(**attrs)
 
     @property
     def _fetch_query(self) -> str:
@@ -81,7 +81,7 @@ class GenreFilmworkReader(reader.Reader):
         row: tuple[Any],
     ) -> models.Person:
         attrs = self._build_attrs(cursor, row)
-        return models.GenreFilmwork(**attrs)
+        return models.GenreFilmWork(**attrs)
 
     @property
     def _fetch_query(self) -> str:
