@@ -28,9 +28,11 @@ async def show():
 async def show2():
     """Отобразить таблицу БД с помощью ридера и моделей."""
     db_path = 'sqlite_to_postgres/db.sqlite'
-    fwr = conf_readers.FilmworkReader(db_path, size=ROWS_PER_READ)
-    async for fw_models in fwr.read():
-        print(*fw_models, sep='\n\n', end='\n\n**************\n\n')
+    async with sqlite_conn_context.conn_context(db_path) as conn:
+        fwr = conf_readers.FilmworkReader(size=ROWS_PER_READ)
+        fwr.set_connection(conn)
+        async for fw_models in fwr.read():
+            print(*fw_models, sep='\n\n', end='\n\n**************\n\n')
 
 
 async def insert_values():
@@ -70,4 +72,4 @@ async def copy():
 
 
 if __name__ == '__main__':
-    asyncio.run(copy())
+    asyncio.run(show2())

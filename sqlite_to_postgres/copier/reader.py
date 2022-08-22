@@ -25,7 +25,7 @@ class Reader(abc.ABC):
         """
         self.__conn.row_factory = self._row_factory
         async with self.__conn.execute(self._fetch_query) as curs:
-            curs.arraysize = int(self.__size)
+            curs.arraysize = self.__size
             while selected_data := await curs.fetchmany():
                 yield selected_data
 
