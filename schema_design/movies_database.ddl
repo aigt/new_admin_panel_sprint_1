@@ -32,10 +32,8 @@ CREATE TABLE IF NOT EXISTS content.person_film_work (
     created timestamp with time zone
 );
 
--- Индекс не уникальный так как один person может
--- иметь несколько ролей в одном фильме
-CREATE INDEX film_work_person_idx
-ON content.person_film_work (film_work_id, person_id);
+CREATE UNIQUE INDEX film_work_person_idx
+ON content.person_film_work (film_work_id, person_id, role);
 
 
 
