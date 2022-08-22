@@ -10,13 +10,10 @@ async def load_from_sqlite():
     sqlite_path = settings.DATABASES['sqlite']['db_path']
     pg_settings = settings.DATABASES['pg']
     async with (
-        sqlite_conn_context.conn_context(sqlite_path) as rconn,
-        pg_conn_context.conn_context(pg_settings) as wconn,
+        sqlite_conn_context.conn_context(sqlite_path) as read_conn,
+        pg_conn_context.conn_context(pg_settings) as write_conn,
     ):
-        for job in settings.JOBS:
-            job.reader.set_connection(rconn)
-            job.writer.set_connection(wconn)
-        await copier.carry_over(settings.JOBS)
+        await copier.carry_over(settings.JOBS, read_conn, write_conn)
 
 
 if __name__ == '__main__':

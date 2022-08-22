@@ -8,6 +8,9 @@ import asyncio
 from dataclasses import dataclass
 from typing import Iterable
 
+import aiosqlite
+import asyncpg
+
 from sqlite_to_postgres.copier import reader, writer
 
 
@@ -75,12 +78,20 @@ async def _produce_job(job: CarryJob) -> None:
     await asyncio.wait({db_writer})
 
 
-async def carry_over(jobs: Iterable[CarryJob]) -> None:
+async def carry_over(
+    jobs: Iterable[CarryJob],
+    read_conn: aiosqlite.Connection,
+    write_conn: asyncpg.Connection,
+) -> None:
     """Выполнить список работ по копированию данных.
 
     Args:
         jobs (Iterable[CarryJob]): список работ
+        read_conn (aiosqlite.Connection): Соединение с БД источником данных
+        write_conn (asyncpg.Connection): Соединение с БД для записи данных
     """
     # Копирование каждой таблицы выполняется как отдельная работа
     for job in jobs:
+        job.reader.set_connection(read_conn)
+        job.writer.set_connection(write_conn)
         await _produce_job(job)
