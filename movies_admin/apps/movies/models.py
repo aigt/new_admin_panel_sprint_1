@@ -138,9 +138,14 @@ class GenreFilmwork(UUIDMixin):
 class PersonFilmwork(UUIDMixin):
     """Промежуточная таблица для связи персон и кинопроизведений."""
 
+    class Role(models.TextChoices):
+        ACTOR = ('ACTOR', _('actor'))
+        WRITER = ('WRITER', _('writer'))
+        DIRECTOR = ('DIRECTOR', _('director'))
+
     film_work = models.ForeignKey('Filmwork', on_delete=models.CASCADE)
     person = models.ForeignKey('Person', on_delete=models.CASCADE)
-    role = models.TextField(_('role'))
+    role = models.TextField(_('role'), choices=Role.choices)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
