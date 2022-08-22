@@ -26,10 +26,8 @@ class Reader(abc.ABC):
         self.__conn.row_factory = self._row_factory
         async with self.__conn.execute(self._fetch_query) as curs:
             curs.arraysize = int(self.__size)
-            selected_data = await curs.fetchmany()
-            while selected_data:
+            while selected_data := await curs.fetchmany():
                 yield selected_data
-                selected_data = await curs.fetchmany()
 
     def set_connection(self, conn: aiosqlite.Connection):
         """Задать соединение с БД.
