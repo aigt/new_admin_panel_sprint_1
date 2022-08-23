@@ -14,6 +14,7 @@ class Reader(abc.ABC):
         *,
         schema,
         size: int = 1,
+        connection: aiosqlite.Connection,
     ) -> None:
         """Конструктор.
 
@@ -22,10 +23,12 @@ class Reader(abc.ABC):
             schema: Датакласс-схема данных
             size (int, optional): Количество считываемых рядов за раз. По
                                   умолчанию = 1.
+            connection (aiosqlite.Connection): соединение
         """
         self.__size = size
         self.__table_name = table_name
         self.__schema = schema
+        self.__conn = connection
 
     async def read(self) -> list[Any]:
         """Читать набор строк из БД (количество определено в свойстве size).
@@ -33,22 +36,14 @@ class Reader(abc.ABC):
         Yields:
             list[Any]: считанный набор строк
         """
-        self.__conn.row_factory = self._row_factory
+        self.__conn.row_factory = self.__row_factory
         fetch_query = 'SELECT * FROM {table};'.format(table=self.__table_name)
         async with self.__conn.execute(fetch_query) as curs:
             curs.arraysize = self.__size
             while selected_data := await curs.fetchmany():
                 yield selected_data
 
-    def set_connection(self, conn: aiosqlite.Connection):
-        """Задать соединение с БД.
-
-        Args:
-            conn (aiosqlite.Connection): соединение
-        """
-        self.__conn = conn
-
-    def _row_factory(
+    def __row_factory(
         self,
         cursor: aiosqlite.Cursor,
         row: tuple[Any],

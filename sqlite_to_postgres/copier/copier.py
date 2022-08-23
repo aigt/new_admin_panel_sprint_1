@@ -5,21 +5,11 @@
 """
 
 import asyncio
-from dataclasses import dataclass
-from typing import Iterable
 
 import aiosqlite
 import asyncpg
 
 from sqlite_to_postgres.copier import reader, writer
-
-
-@dataclass(frozen=True, slots=True)
-class CarryJob:
-    """Данные для выполнения работы по копированию таблицы БД."""
-
-    reader: reader.Reader
-    writer: writer.Writer
 
 
 async def _read(
@@ -52,46 +42,61 @@ async def _write(
         queue.task_done()
 
 
-async def _produce_job(job: CarryJob) -> None:
+async def _produce_job(
+    db_reader: reader.Reader,
+    db_writer: writer.Writer,
+) -> None:
     """Выполнить работу.
 
     Args:
-        job (CarryJob): Информация для выполнения работы по копированию данных
+        db_reader (reader.Reader): Читатель из БД
+        db_writer (reader.Writer): Писатель в БД
     """
     # Создать очередь через которую будут передаваться данные.
     queue = asyncio.Queue(maxsize=10)
 
     # Создать таск для чтения бд.
-    db_reader = asyncio.create_task(_read(queue, job.reader))
+    task_reader = asyncio.create_task(_read(queue, db_reader))
 
     # Создать таск для записи в бд.
-    db_writer = asyncio.create_task(_write(queue, job.writer))
+    task_writer = asyncio.create_task(_write(queue, db_writer))
 
     # Ожидаем пока все данные будут прочитаны
-    await asyncio.wait({db_reader})
+    await asyncio.wait({task_reader})
 
     # Затем ждём пока все данные из очереди будут записаны
     await queue.join()
 
     # Отменить таск записи в бд и дождаться отмены.
-    db_writer.cancel()
-    await asyncio.wait({db_writer})
+    task_writer.cancel()
+    await asyncio.wait({task_writer})
 
 
 async def carry_over(
-    jobs: Iterable[CarryJob],
+    table_maps: dict,
     read_conn: aiosqlite.Connection,
     write_conn: asyncpg.Connection,
+    rows_per_read: int,
 ) -> None:
     """Выполнить список работ по копированию данных.
 
     Args:
-        jobs (Iterable[CarryJob]): список работ
+        table_maps (dict): список работ
         read_conn (aiosqlite.Connection): Соединение с БД источником данных
         write_conn (asyncpg.Connection): Соединение с БД для записи данных
+        rows_per_read (int): Количество считываемых рядов за раз
     """
     # Копирование каждой таблицы выполняется как отдельная работа
-    for job in jobs:
-        job.reader.set_connection(read_conn)
-        job.writer.set_connection(write_conn)
-        await _produce_job(job)
+    for table_name, tmap in table_maps.items():
+        db_reader = reader.Reader(
+            table_name,
+            schema=tmap[0],
+            size=rows_per_read,
+            connection=read_conn,
+        )
+        db_writer = writer.Writer(
+            table_name,
+            adapters=tmap[1],
+            connection=write_conn,
+        )
+        await _produce_job(db_reader, db_writer)

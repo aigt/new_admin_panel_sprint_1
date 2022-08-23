@@ -3,9 +3,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from sqlite_to_postgres.copier import copier, reader
 from sqlite_to_postgres.db import models
-from sqlite_to_postgres.settings import conf_writers
+from sqlite_to_postgres.settings import writer_adapters
 
 # Директория приложения
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -34,58 +33,30 @@ DATABASES = {
 
 
 TABLE_MAP = {
-    'film_work': models.FilmWork,
-    'person': models.Person,
-    'genre': models.Genre,
-    'person_film_work': models.PersonFilmWork,
-    'genre_film_work': models.GenreFilmWork,
+    'film_work': (
+        models.FilmWork,
+        (
+            writer_adapters.adapt_timestamps,
+            writer_adapters.adapt_film_work_file_path,
+        ),
+    ),
+    'person': (
+        models.Person,
+        (writer_adapters.adapt_timestamps,),
+    ),
+    'genre': (
+        models.Genre,
+        (
+            writer_adapters.adapt_timestamps,
+            writer_adapters.adapt_genre_description,
+        ),
+    ),
+    'person_film_work': (
+        models.PersonFilmWork,
+        (writer_adapters.adapt_timestamps,),
+    ),
+    'genre_film_work': (
+        models.GenreFilmWork,
+        (writer_adapters.adapt_timestamps,),
+    ),
 }
-
-
-JOBS = (
-    # Перенос таблицы кинопроизведений
-    copier.CarryJob(
-        reader=reader.Reader(
-            'film_work',
-            schema=models.FilmWork,
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.FilmworkWriter(),
-    ),
-    # Перенос таблицы персон
-    copier.CarryJob(
-        reader=reader.Reader(
-            'person',
-            schema=models.Person,
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.PersonWriter(),
-    ),
-    # Перенос таблицы жанров
-    copier.CarryJob(
-        reader=reader.Reader(
-            'genre',
-            schema=models.Genre,
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.GenreWriter(),
-    ),
-    # Перенос таблицы связи персон и кинопроизведений
-    copier.CarryJob(
-        reader=reader.Reader(
-            'person_film_work',
-            schema=models.PersonFilmWork,
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.PersonFilmworkWriter(),
-    ),
-    # Перенос таблицы связи жанров и кинопроизведений
-    copier.CarryJob(
-        reader=reader.Reader(
-            'genre_film_work',
-            schema=models.GenreFilmWork,
-            size=ROWS_PER_READ,
-        ),
-        writer=conf_writers.GenreFilmworkWriter(),
-    ),
-)

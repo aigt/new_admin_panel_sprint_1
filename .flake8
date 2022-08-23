@@ -12,15 +12,15 @@ per-file-ignores =
   #
   sqlite_to_postgres/copier/copier.py: WPS457
   #
-  sqlite_to_postgres/copier/reader.py: DAR202, WPS214, RST301, WPS112, WPS332, S608
+  sqlite_to_postgres/copier/reader.py: DAR202, WPS214, RST301, WPS112, WPS332, S608, RST201
   #
-  sqlite_to_postgres/copier/writer.py: DAR202, WPS112, WPS462
+  sqlite_to_postgres/copier/writer.py: DAR202, WPS112, WPS462, RST301
   #
   sqlite_to_postgres/tools/select_table.py: WPS421, WPS462, WPS210
   #
   sqlite_to_postgres/db/models.py: D105, D105
   #
-  sqlite_to_postgres/settings/conf_writers.py: WPS462, WPS227, WPS226, WPS336
+  sqlite_to_postgres/settings/writer_adapters.py: WPS336
 
 # Excluding some directories:
 exclude = .git,__pycache__,venv,.eggs,*.egg,manage.py,movies_admin/*/migrations/*.py,sqlite_to_postgres/tests/*.py

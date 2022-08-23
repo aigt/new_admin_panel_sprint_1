@@ -86,4 +86,4 @@ async def copy():
 
 
 if __name__ == '__main__':
-    asyncio.run(show2())
+    asyncio.run(copy())

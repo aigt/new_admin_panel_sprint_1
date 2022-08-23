@@ -13,7 +13,12 @@ async def load_from_sqlite():
         sqlite_conn_context.conn_context(sqlite_path) as read_conn,
         pg_conn_context.conn_context(pg_settings) as write_conn,
     ):
-        await copier.carry_over(settings.JOBS, read_conn, write_conn)
+        await copier.carry_over(
+            settings.TABLE_MAP,
+            read_conn,
+            write_conn,
+            settings.ROWS_PER_READ,
+        )
 
 
 if __name__ == '__main__':
