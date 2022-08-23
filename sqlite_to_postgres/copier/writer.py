@@ -36,8 +36,8 @@ class Writer(abc.ABC):
         query, prepared_data = self.__prepare_query(data_pack)
         try:
             await self.__conn.executemany(query, map(astuple, prepared_data))
-        except Exception as exception:
-            logging.exception(exception, query, prepared_data)
+        except asyncpg.exceptions.NullValueNotAllowedError as exception:
+            logging.exception('Попытка записи нулевого значения:', exception)
 
     def __adapt_fields(self, model: Any):
         model_fields = {
