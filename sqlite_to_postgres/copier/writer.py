@@ -1,4 +1,3 @@
-import abc
 import logging
 from dataclasses import asdict, astuple, fields, make_dataclass
 from typing import Any, Callable
@@ -6,8 +5,8 @@ from typing import Any, Callable
 import asyncpg
 
 
-class Writer(abc.ABC):
-    """Абстрактный класс-писатель в таблицу БД."""
+class Writer:
+    """Класс-писатель в таблицу БД."""
 
     def __init__(
         self,
@@ -26,6 +25,7 @@ class Writer(abc.ABC):
         self.__table_name = table_name
         self.__adapters = adapters
         self.__conn = connection
+        self.__query = None
 
     async def write(self, data_pack: list[Any]) -> None:
         """Писать набор строк в БД.
@@ -33,9 +33,16 @@ class Writer(abc.ABC):
         Args:
             data_pack: набор строк для записи
         """
-        query, prepared_data = self.__prepare_query(data_pack)
+        prepared_data = tuple(map(self.__adapt_fields, data_pack))
+
+        if self.__query is None:
+            self.__update_query(prepared_data[0])
+
         try:
-            await self.__conn.executemany(query, map(astuple, prepared_data))
+            await self.__conn.executemany(
+                self.__query,
+                map(astuple, prepared_data),
+            )
         except asyncpg.exceptions.NullValueNotAllowedError as exception:
             logging.exception('Попытка записи нулевого значения:', exception)
 
@@ -56,10 +63,14 @@ class Writer(abc.ABC):
         new_dc = make_dataclass(self.__table_name, model_fields)
         return new_dc(**field_values)
 
-    def __prepare_query(self, data_pack: tuple[Any]) -> tuple[str, tuple[Any]]:
-        prepared_data = tuple(map(self.__adapt_fields, data_pack))
+    def __update_query(self, schema: Any):
+        """Обнови запрос к БД по схеме.
 
-        attrs = prepared_data[0].__annotations__.keys()
+        Args:
+            schema (Any): схема (датакласс), под которую будет перестроен
+                          запрос
+        """
+        attrs = schema.__annotations__.keys()
         cols = ','.join(attrs)
         values_pattern = ','.join(
             '${num}'.format(num=num)
@@ -69,7 +80,7 @@ class Writer(abc.ABC):
             )
         )
 
-        query = """
+        self.__query = """
             INSERT INTO content.{table}({cols})
             VALUES({values_pattern})
             ON CONFLICT (id) DO NOTHING;
@@ -78,5 +89,3 @@ class Writer(abc.ABC):
             cols=cols,
             values_pattern=values_pattern,
         )
-
-        return query, prepared_data
