@@ -12,7 +12,7 @@ class Reader(abc.ABC):
         self,
         table_name: str,
         *,
-        schema,
+        schema: Any,
         size: int = 1,
         connection: aiosqlite.Connection,
     ) -> None:

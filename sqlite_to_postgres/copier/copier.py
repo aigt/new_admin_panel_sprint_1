@@ -1,6 +1,6 @@
 """Модуль копирует данные из одной базы данных в другую.
 
-Каждая копируемая таблица заносится в свою работу CarryJob.
+Каждая копируемая таблица заносится в свою работу.
 После чего все работы запускаются методом carry_over().
 """
 
@@ -56,20 +56,20 @@ async def _produce_job(
     queue = asyncio.Queue(maxsize=10)
 
     # Создать таск для чтения бд.
-    task_reader = asyncio.create_task(_read(queue, db_reader))
+    reader_task = asyncio.create_task(_read(queue, db_reader))
 
     # Создать таск для записи в бд.
-    task_writer = asyncio.create_task(_write(queue, db_writer))
+    writer_task = asyncio.create_task(_write(queue, db_writer))
 
     # Ожидаем пока все данные будут прочитаны
-    await asyncio.wait({task_reader})
+    await asyncio.wait({reader_task})
 
     # Затем ждём пока все данные из очереди будут записаны
     await queue.join()
 
     # Отменить таск записи в бд и дождаться отмены.
-    task_writer.cancel()
-    await asyncio.wait({task_writer})
+    writer_task.cancel()
+    await asyncio.wait({writer_task})
 
 
 async def carry_over(
