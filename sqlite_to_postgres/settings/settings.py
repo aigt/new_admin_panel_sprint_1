@@ -13,6 +13,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Загрузка настроек в окружение
 load_dotenv(dotenv_path=BASE_DIR.joinpath('config/.env'))
 
+# Настройки логирования
+if DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
 
 # Количество записей обрабатываемых за раз
 ROWS_PER_READ = 100
