@@ -27,8 +27,8 @@ _ENV = environ['DJANGO_ENV']
 _base_settings = (
     'components/common.py',
     'components/database.py',
-    'templates.py',
-    'internationalization.py',
+    'components/templates.py',
+    'components/internationalization.py',
     # Выбор настроек environment:
     'environments/{0}.py'.format(_ENV),
     # Опционально перезапись отдельных настроек:

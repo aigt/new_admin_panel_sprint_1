@@ -70,8 +70,6 @@ class FilmworkAdmin(admin.ModelAdmin):
         'creation_date',
         'rating',
         'type',
-        'certificate',
-        'file_path',
         *TIMESTAMP_FIELDS,
     )
     readonly_fields = TIMESTAMP_FIELDS
