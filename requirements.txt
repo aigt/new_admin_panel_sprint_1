@@ -12,11 +12,6 @@ django==3.2
 django-split-settings==1.1
 
 
-# sqlite_to_postgres
-aiosqlite==0.17
-asyncpg==0.26
-pytest==7.1
-
 
 # Workflow
 bandit==1.7.4

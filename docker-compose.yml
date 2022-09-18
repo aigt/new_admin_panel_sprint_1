@@ -6,7 +6,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - ../env_files/.env.db
+      - ./env_files/.env.db
     volumes:
       - $HOME/postgresql/data:/var/lib/postgresql/data
     healthcheck:
@@ -20,11 +20,11 @@ services:
       retries: 15
 
   sqlite_to_postgres:
-    build: .
+    build: ./sqlite_to_postgres
     env_file:
-      - ../env_files/.env.db
+      - ./env_files/.env.db
     environment:
-      - CLEAN_DB=true
+      - CLEAN_DB=false
       - COPY_DATA_IN_DB=true
       - TEST_DB_CONSISTENSY=true
     depends_on:

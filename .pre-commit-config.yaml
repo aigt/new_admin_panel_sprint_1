@@ -6,6 +6,6 @@ repos:
         description: wemake-python-styleguide enforcement
         entry: flake8
         args: [--config, .flake8]
-        exclude: sqlite_to_postgres
+        exclude: movies
         language: python
         types: [python]

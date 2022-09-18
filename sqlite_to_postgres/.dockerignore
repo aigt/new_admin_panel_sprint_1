@@ -2,8 +2,5 @@ venv
 .vscode
 .pytest_cache
 README.md
-.flake8
-.gitignore
-.pre-commit-config.yaml
 __pycache__
 Dockerfile
