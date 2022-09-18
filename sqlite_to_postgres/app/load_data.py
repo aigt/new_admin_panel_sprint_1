@@ -2,10 +2,10 @@ import asyncio
 import logging
 import logging.config
 
-from sqlite_to_postgres import apply_schemadb
-from sqlite_to_postgres.copier import copier
-from sqlite_to_postgres.db import pg_conn_context, sqlite_conn_context
-from sqlite_to_postgres.settings import settings
+import apply_schemadb
+from copier import copier
+from db import pg_conn_context, sqlite_conn_context
+from settings import settings
 
 logging.config.dictConfig(settings.LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

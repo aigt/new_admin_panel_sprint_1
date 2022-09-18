@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS content.film_work (
 );
 
 CREATE INDEX IF NOT EXISTS film_work_modified_idx
-ON content.film_work modified;
+ON content.film_work (modified);
 
 
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS content.person (
 );
 
 CREATE INDEX IF NOT EXISTS person_modified_idx
-ON content.person modified;
+ON content.person (modified);
 
 
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS content.genre (
 );
 
 CREATE INDEX IF NOT EXISTS genre_modified_idx
-ON content.genre modified;
+ON content.genre (modified);
 
 
 

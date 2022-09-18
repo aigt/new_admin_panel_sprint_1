@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:13
+    restart: always
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./env_files/.env.db
+    volumes:
+      - $HOME/postgresql/data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -d $$POSTGRES_DB -h $$DB_HOST -p $$DB_PORT -U $$POSTGRES_USER"
+        ]
+      interval: 3s
+      timeout: 5s
+      retries: 15
+
+  sqlite_to_postgres:
+    build: .
+    env_file:
+      - ./env_files/.env.db
+    environment:
+      - CLEAN_DB=true
+      - COPY_DATA_IN_DB=true
+      - TEST_DB_CONSISTENSY=true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      - /opt/app/entrypoint.sh

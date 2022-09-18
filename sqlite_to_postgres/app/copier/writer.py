@@ -4,7 +4,7 @@ from dataclasses import asdict, astuple, fields, make_dataclass
 from typing import Any, Callable
 
 import asyncpg
-from sqlite_to_postgres.settings import settings
+from settings import settings
 
 logging.config.dictConfig(settings.LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

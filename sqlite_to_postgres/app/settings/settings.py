@@ -4,15 +4,18 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from sqlite_to_postgres.db import models
-from sqlite_to_postgres.settings import writer_adapters
+from db import models
+from settings import writer_adapters
 
 # Директория приложения
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Загрузка настроек в окружение
-load_dotenv(dotenv_path=BASE_DIR.joinpath('env_files/.env.db'))
+# Загрузка настроек в окружение из файла,
+# если окружение PROD_ENV не установлено в production
+_ENV = os.environ['PROD_ENV']
+if _ENV != 'production':
+    load_dotenv(dotenv_path=BASE_DIR.joinpath('../env_files/.env.db'))
 
 # Количество записей обрабатываемых за раз
 ROWS_PER_READ = 100
@@ -27,7 +30,7 @@ DATABASES = {
         'port': os.environ.get('DB_PORT', 5432),  # noqa: WPS432
     },
     'sqlite': {
-        'db_path': 'sqlite_to_postgres/db.sqlite',
+        'db_path': './db.sqlite',
     },
 }
 
@@ -84,4 +87,4 @@ LOGGING_CONFIG = {
 }
 
 
-DB_DDL_SCHEMA_FILE = BASE_DIR.joinpath('schema_design/movies_database.ddl')
+DB_DDL_SCHEMA_FILE = BASE_DIR.joinpath('sql_schema_db/movies_database.ddl')

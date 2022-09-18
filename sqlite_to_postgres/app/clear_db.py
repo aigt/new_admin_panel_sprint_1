@@ -5,9 +5,8 @@ import logging.config
 from contextlib import contextmanager
 
 import psycopg2
-from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
-from sqlite_to_postgres.settings import settings
+from settings import settings
 
 logging.config.dictConfig(settings.LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

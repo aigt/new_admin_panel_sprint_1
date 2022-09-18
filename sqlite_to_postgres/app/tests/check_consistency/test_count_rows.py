@@ -13,7 +13,7 @@ def test_compare_counts(lite_transaction, pg_transaction):
     )
 
     for table in tables_list:
-        pg_transaction.execute('SELECT COUNT(*) FROM %s', (AsIs(table),))
+        pg_transaction.execute('SELECT COUNT(*) FROM %s', (AsIs(f'content.{table}'),))
         pg_count = pg_transaction.fetchone()['count']
         lite_transaction.execute('SELECT COUNT(*) FROM %s' % table)
         lite_count = lite_transaction.fetchone()[0]

@@ -65,3 +65,4 @@ local_settings.py
 
 config/.env
 db.sqlite3
+.env.db

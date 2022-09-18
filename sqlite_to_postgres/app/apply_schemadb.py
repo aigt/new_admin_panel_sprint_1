@@ -1,7 +1,7 @@
 import logging
 import logging.config
 
-from sqlite_to_postgres.settings import settings
+from settings import settings
 
 logging.config.dictConfig(settings.LOGGING_CONFIG)
 logger = logging.getLogger(__name__)

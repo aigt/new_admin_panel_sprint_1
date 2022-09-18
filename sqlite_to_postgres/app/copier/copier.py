@@ -9,7 +9,7 @@ import asyncio
 import aiosqlite
 import asyncpg
 
-from sqlite_to_postgres.copier import reader, writer
+from copier import reader, writer
 
 
 async def _read(

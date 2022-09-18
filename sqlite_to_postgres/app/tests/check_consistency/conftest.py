@@ -1,31 +1,13 @@
-import os
 import sqlite3
-from pathlib import Path
 
 import psycopg2
 import pytest
-from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
-
-# Директория приложения
-BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+from settings import settings
 
 
-# Загрузка настроек в окружение
-load_dotenv(dotenv_path=BASE_DIR.joinpath('config/.env'))
 
-DATABASES = {
-    'pg': {
-        'database': os.environ.get('DB_NAME'),
-        'user': os.environ.get('DB_USER'),
-        'password': os.environ.get('DB_PASSWORD'),
-        'host': os.environ.get('DB_HOST', 'postgres'),
-        'port': os.environ.get('DB_PORT', 5432),  # noqa: WPS432
-    },
-    'sqlite': {
-        'db_path': BASE_DIR.joinpath('sqlite_to_postgres/db.sqlite'),
-    },
-}
+DATABASES = settings.DATABASES
 
 
 @pytest.fixture
