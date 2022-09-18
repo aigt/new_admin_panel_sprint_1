@@ -12,13 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Загрузка настроек в окружение
-load_dotenv(dotenv_path=BASE_DIR.joinpath('config/.env'))
-
-DEBUG = True
-
-# Настройки логирования
-if DEBUG:
-    logging.basicConfig(level=logging.DEBUG)
+load_dotenv(dotenv_path=BASE_DIR.joinpath('env_files/.env.db'))
 
 # Количество записей обрабатываемых за раз
 ROWS_PER_READ = 100
@@ -26,9 +20,9 @@ ROWS_PER_READ = 100
 
 DATABASES = {
     'pg': {
-        'database': os.environ.get('DB_NAME'),
-        'user': os.environ.get('DB_USER'),
-        'password': os.environ.get('DB_PASSWORD'),
+        'database': os.environ.get('POSTGRES_DB'),
+        'user': os.environ.get('POSTGRES_USER'),
+        'password': os.environ.get('POSTGRES_PASSWORD'),
         'host': os.environ.get('DB_HOST', '127.0.0.1'),
         'port': os.environ.get('DB_PORT', 5432),  # noqa: WPS432
     },
@@ -66,3 +60,28 @@ TABLE_MAP = {
         (writer_adapters.adapt_timestamps,),
     ),
 }
+
+LOGGING_CONFIG = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {'format': '%(asctime)s %(levelname)s - %(name)s: %(message)s'},
+    },
+    'handlers': {
+        'default': {
+            'level': 'DEBUG',
+            'formatter': 'standard',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+
+
+DB_DDL_SCHEMA_FILE = BASE_DIR.joinpath('schema_design/movies_database.ddl')

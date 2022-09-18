@@ -1,8 +1,13 @@
 import logging
+import logging.config
 from dataclasses import asdict, astuple, fields, make_dataclass
 from typing import Any, Callable
 
 import asyncpg
+from sqlite_to_postgres.settings import settings
+
+logging.config.dictConfig(settings.LOGGING_CONFIG)
+logger = logging.getLogger(__name__)
 
 
 class Writer:
@@ -26,6 +31,7 @@ class Writer:
         self.__adapters = adapters
         self.__conn = connection
         self.__query = None
+        self.__schema = None
 
     async def write(self, data_pack: list[Any]) -> None:
         """Писать набор строк в БД.
@@ -33,18 +39,34 @@ class Writer:
         Args:
             data_pack: набор строк для записи
         """
+        logger.debug('Preparing data pack to writing...')
         prepared_data = tuple(map(self.__adapt_fields, data_pack))
+        logger.debug('Data pack is prepared to writing')
 
         if self.__query is None:
+            logger.debug(
+                'Preparing DB query for table {table}...'.format(
+                    table=self.__table_name,
+                ),
+            )
             self.__update_query(prepared_data[0])
+            logger.debug(
+                'DB query is prepared:\n{query}'.format(query=self.__query),
+            )
 
         try:
+            logger.debug('Writing data pack...')
             await self.__conn.executemany(
                 self.__query,
                 map(astuple, prepared_data),
             )
+            logger.debug(
+                'Data pack is written into {table}'.format(
+                    table=self.__table_name,
+                ),
+            )
         except asyncpg.exceptions.NullValueNotAllowedError as exception:
-            logging.exception('Попытка записи нулевого значения:', exception)
+            logger.exception('Null Value Not Allowed Error:', exception)
 
     def __adapt_fields(self, model: Any):
         model_fields = {
@@ -60,8 +82,21 @@ class Writer:
         for adapter in self.__adapters:
             model_fields, field_values = adapter(model_fields, field_values)
 
-        new_dc = make_dataclass(self.__table_name, model_fields)
-        return new_dc(**field_values)
+        if self.__schema is None:
+            self.__schema = make_dataclass(
+                self.__table_name,
+                model_fields,
+                frozen=True,
+                slots=True,
+            )
+            logger.debug(
+                'Created new schema for table {table}: {schema}'.format(
+                    table=self.__table_name,
+                    schema=self.__schema,
+                ),
+            )
+
+        return self.__schema(**field_values)
 
     def __update_query(self, schema: Any):
         """Обнови запрос к БД по схеме.
