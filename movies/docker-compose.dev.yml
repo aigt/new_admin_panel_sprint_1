@@ -33,4 +33,4 @@ services:
       postgres:
         condition: service_healthy
     entrypoint:
-      - /opt/app/entrypoint.sh
+      - /app/entrypoint.sh

@@ -1,7 +1,10 @@
 version: '3.9'
 services:
   movies:
-    build: ./movies
+    build:
+      context: ./movies
+      args:
+        - APP_ROOT=/app
     ports:
       - "8000:8000"
     env_file:
@@ -14,7 +17,7 @@ services:
       postgres:
         condition: service_healthy
     entrypoint:
-      - /opt/app/entrypoint.sh
+      - /app/entrypoint.sh
 
   postgres:
     image: postgres:13
