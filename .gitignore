@@ -63,6 +63,7 @@ __pycache__/
 local_settings.py
 
 
-config/.env
+.env
+movies.env
 db.sqlite3
 .env.db

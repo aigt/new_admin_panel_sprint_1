@@ -1,10 +1,26 @@
 version: '3.9'
 services:
+  movies:
+    build: ./movies
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./env_files/.env.db
+      - ./movies/env_files/movies.env
+    environment:
+      - MAKE_MIGRATIONS=true
+      - NEED_TO_CREATE_SUPERUSER=false
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint:
+      - /opt/app/entrypoint.sh
+
   postgres:
     image: postgres:13
     restart: always
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     env_file:
       - ./env_files/.env.db
     volumes:

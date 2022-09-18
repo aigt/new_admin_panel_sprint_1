@@ -2,6 +2,8 @@
 
 import os
 
+from movies_admin import settings
+
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 
@@ -45,3 +47,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(settings.BASE_DIR, 'static/')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(settings.BASE_DIR, 'media/')

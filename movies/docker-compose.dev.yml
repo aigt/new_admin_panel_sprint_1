@@ -19,14 +19,16 @@ services:
       timeout: 5s
       retries: 15
 
-  sqlite_to_postgres:
+  movies:
     build: .
+    ports:
+      - "8000:8000"
     env_file:
       - ../env_files/.env.db
+      - ./env_files/movies.env
     environment:
-      - CLEAN_DB=true
-      - COPY_DATA_IN_DB=true
-      - TEST_DB_CONSISTENSY=true
+      - MAKE_MIGRATIONS=true
+      - NEED_TO_CREATE_SUPERUSER=true
     depends_on:
       postgres:
         condition: service_healthy
