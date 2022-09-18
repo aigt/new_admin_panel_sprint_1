@@ -5,6 +5,7 @@ repos:
         name: flake8
         description: wemake-python-styleguide enforcement
         entry: flake8
-        args: ["--config=.flake8"]
+        args: [--config, .flake8]
+        exclude: sqlite_to_postgres
         language: python
         types: [python]
