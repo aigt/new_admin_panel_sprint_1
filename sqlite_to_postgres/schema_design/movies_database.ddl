@@ -12,7 +12,10 @@ CREATE TABLE IF NOT EXISTS content.film_work (
     type TEXT NOT NULL,
     created timestamp with time zone,
     modified timestamp with time zone
-); 
+);
+
+CREATE INDEX IF NOT EXISTS film_work_modified_idx
+ON content.film_work modified;
 
 
 
@@ -22,6 +25,9 @@ CREATE TABLE IF NOT EXISTS content.person (
     created timestamp with time zone,
     modified timestamp with time zone
 );
+
+CREATE INDEX IF NOT EXISTS person_modified_idx
+ON content.person modified;
 
 
 
@@ -45,6 +51,9 @@ CREATE TABLE IF NOT EXISTS content.genre (
     created timestamp with time zone,
     modified timestamp with time zone
 );
+
+CREATE INDEX IF NOT EXISTS genre_modified_idx
+ON content.genre modified;
 
 
 
